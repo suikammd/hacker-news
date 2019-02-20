@@ -1,6 +1,5 @@
 import 'news_api_provider.dart';
 import 'news_db_provider.dart';
-import 'news_api_provider.dart';
 import 'dart:async';
 import '../models/item_model.dart';
 
