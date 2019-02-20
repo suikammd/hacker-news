@@ -14,12 +14,13 @@ class NewsDbProvider implements Source, Cache{
   }
 
   NewsDbProvider() {
+    print("#######initiating table!");
     init();
   }
 
   void init() async{
     Directory documentDirectory = await getApplicationDocumentsDirectory();
-    final path = join(documentDirectory.path, "items.db");
+    final path = join(documentDirectory.path, "items_v2.db");
 
     db = await openDatabase(
       path,
@@ -34,13 +35,13 @@ class NewsDbProvider implements Source, Cache{
               time INTEGER,
               text TEXT,
               parent INTEGER,
-              kid BLOB,
+              kids BLOB,
               dead INTEGER,
               deleted INTEGER,
               url TEXT,
               score INTEGER,
               title TEXT,
-              descendents INTEGER
+              descendants INTEGER            
             )
         """);
       }
@@ -57,7 +58,6 @@ class NewsDbProvider implements Source, Cache{
     );
 
     if (maps.length > 0 ) {
-      print(maps.first);
       ItemModel.fromDb(maps.first);
     }
 
@@ -65,7 +65,11 @@ class NewsDbProvider implements Source, Cache{
   }
 
   Future<int> addItem(ItemModel item) {
-    return db.insert("Items", item.toMapForDb());
+    return db.insert(
+        "Items",
+        item.toMapForDb(),
+        conflictAlgorithm: ConflictAlgorithm.ignore,
+    );
   }
 }
 
